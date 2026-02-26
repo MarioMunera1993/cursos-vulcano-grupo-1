@@ -1,4 +1,4 @@
-# 🌋 vulcano-api-grupo-1
+# 🌋 cursos-vulcano-grupo-1
 **Plataforma de gamificación educativa para fortalecer la lógica de programación mediante desafíos interactivos.**
 
 ---
