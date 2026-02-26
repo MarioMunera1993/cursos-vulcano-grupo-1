@@ -46,7 +46,7 @@
 
 ## 🛠️ Tecnologías y Herramientas (Tech Stack)
 
-- **Backend:** Java 21, Spring Boot 4.0.2, Spring Data JPA, Maven.
+- **Backend:** Java 21, Spring Boot 3.4.2, Spring Data JPA, Maven.
 - **Frontend:** React, JavaScript (ES6+), Tailwind CSS.
 - **Base de Datos:** PostgreSQL para producción y H2 para desarrollo local.
 - **Otras herramientas:** Git, GitHub, Postman, VScode.
@@ -55,10 +55,10 @@
 
 | Dependencia | Versión | Descripción |
 | :--- | :--- | :--- |
-| `spring-boot-starter-web` | 4.0.2 | API REST con Spring MVC |
-| `spring-boot-starter-data-jpa` | 4.0.2 | ORM con Hibernate / Spring Data JPA |
+| `spring-boot-starter-web` | 3.4.2 | API REST con Spring MVC |
+| `spring-boot-starter-data-jpa` | 3.4.2 | ORM con Hibernate / Spring Data JPA |
 | `lombok` | managed | Reducción de boilerplate (getters, setters, constructores) |
-| `spring-boot-devtools` | 4.0.2 | Recarga automática en desarrollo |
+| `spring-boot-devtools` | 3.4.2 | Recarga automática en desarrollo |
 | `h2` | runtime | Base de datos en memoria para pruebas locales |
 | `postgresql` | runtime | Driver JDBC para PostgreSQL en producción |
 
@@ -100,30 +100,44 @@ git clone https://github.com/MarioMunera1993/vulcano-api-grupo-1.git
 cd vulcano-api-grupo-1
 ```
 
-### 3. Configurar variables de entorno
+### 3. Configurar perfiles de Spring Boot
 
-> 🔒 **Importante:** Las credenciales de la base de datos **nunca** deben estar hardcodeadas en archivos de configuración ni subidas al repositorio. Gestiónalas siempre mediante variables de entorno.
+El proyecto utiliza perfiles de Spring Boot para alternar entre entornos. Los archivos de configuración están en `src/main/resources/`.
 
-Crea un archivo `.env` en la raíz del proyecto (este archivo está en `.gitignore`) con tus credenciales:
+**Perfil de Desarrollo — `application-dev.properties` (H2 en memoria):**
 
-```env
-DB_URL=jdbc:postgresql://<host>:<puerto>/<nombre_bd>?sslmode=require
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_contraseña
+```properties
+# Perfil: dev
+spring.datasource.url=jdbc:h2:mem:vulcanodb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
 ```
 
-Luego utiliza los perfiles de Spring Boot para alternar entre configuraciones de entorno:
-
-**Ejecución con Perfil de Desarrollo (H2):**
-
-Configurado en `src/main/resources/application-dev.properties`. Se activa por defecto o mediante:
+Activa este perfil con:
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-**Ejecución con Perfil de Producción (PostgreSQL):**
+**Perfil de Producción — `application-prod.properties` (PostgreSQL):**
 
-Configurado en `src/main/resources/application-prod.properties`. Requiere las variables de entorno definidas en el `.env` y se activa con:
+> 🔒 **Importante:** Las credenciales **nunca** deben estar hardcodeadas. Usa variables de entorno y añade este archivo a `.gitignore` si contiene valores reales.
+
+```properties
+# Perfil: prod
+spring.datasource.url=jdbc:postgresql://<host>:<puerto>/<nombre_bd>?sslmode=require
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
+Activa este perfil con:
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
 ```
