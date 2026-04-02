@@ -2,6 +2,7 @@ package com.grupo1.cursosvulcano.model.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grupo1.cursosvulcano.model.enums.Status;
 
 import jakarta.persistence.Column;
@@ -49,6 +50,7 @@ public class UserProfile extends BaseEntity {
     @Column(length = 20, nullable = false)
     private Status status = Status.ACTIVE;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "profile") // Nombre del atributo en Usuario
     private User user; 
 
