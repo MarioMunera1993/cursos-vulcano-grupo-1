@@ -2,9 +2,14 @@ package com.grupo1.cursosvulcano.model.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import com.grupo1.cursosvulcano.model.enums.UserRole;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +30,10 @@ public class User extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL) // Si guardo usuario, se guarda perfil
     @JoinColumn(name = "perfil_id", referencedColumnName = "id")
     private UserProfile profile;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USUARIO; // Valor por defecto
+
 
     // Métodos Helper (Convenience methods)
     public void setProfile(UserProfile profile) {
