@@ -1,9 +1,11 @@
 package com.grupo1.cursosvulcano.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.grupo1.cursosvulcano.model.entity.User;
 import com.grupo1.cursosvulcano.model.entity.UserProfile;
+import com.grupo1.cursosvulcano.model.enums.UserRole;
 import com.grupo1.cursosvulcano.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -15,15 +17,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    /**
-     * Crea un nuevo usuario junto con su perfil.
-     * Gracias al método helper setProfile y al CascadeType.ALL,
-     * ambos se guardan en una sola operación.
-     */
     @Transactional
     public User createUser(User user, UserProfile profile) {
         // Usamos el método helper que creamos para vincular ambos objetos en memoria
         user.setProfile(profile);
+        
+        // REGLA DE NEGOCIO: mario_munera es siempre ADMINISTRADOR
+        if ("mario_munera".equalsIgnoreCase(user.getUsername())) {
+            user.setRole(UserRole.ADMIN);
+        }
         
         // Al guardar el usuario, se guarda el perfil automáticamente por el cascade
         return userRepository.save(user);
@@ -89,6 +91,23 @@ public class UserService {
     public void deleteUser(Long id) {
         User user = getUserById(id);
         userRepository.delete(user);
+    }
+
+    /**
+     * Obtener todos los usuarios registrados.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Actualizar solo el rol de un usuario.
+     */
+    @Transactional
+    public User updateUserRole(Long id, UserRole role) {
+        User user = getUserById(id);
+        user.setRole(role);
+        return userRepository.save(user);
     }
 }
 

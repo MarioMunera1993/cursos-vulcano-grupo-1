@@ -1,9 +1,13 @@
 package com.grupo1.cursosvulcano.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.grupo1.cursosvulcano.model.entity.User;
 import com.grupo1.cursosvulcano.model.entity.UserProfile;
+import com.grupo1.cursosvulcano.model.enums.UserRole;
 import com.grupo1.cursosvulcano.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -69,6 +74,25 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Obtener lista de todos los usuarios.
+     */
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    /**
+     * Actualizar solo el ROL de un usuario.
+     * Recibe: { "role": "ADMIN" } o { "role": "USER" }
+     */
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<User> updateRole(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String roleStr = body.get("role");
+        UserRole role = UserRole.valueOf(roleStr);
+        return ResponseEntity.ok(userService.updateUserRole(id, role));
     }
 }
 

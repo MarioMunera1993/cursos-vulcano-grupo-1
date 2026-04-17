@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     private UserProfile profile;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role = UserRole.USUARIO; // Valor por defecto
+    private UserRole role = UserRole.USER; // Valor por defecto
 
 
     // Métodos Helper (Convenience methods)

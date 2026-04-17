@@ -5,6 +5,6 @@ package com.grupo1.cursosvulcano.model.enums;
  * Se usa de forma simple para diferenciar entre Administrador y Usuario regular.
  */
 public enum UserRole {
-    ADMINISTRADOR,
-    USUARIO
+    ADMIN,
+    USER
 }
